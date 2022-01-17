@@ -1,29 +1,18 @@
 <template>
-  <div>
-    <scroll class="content">
-      <ul>
-        <li>个人信息1</li>
-        <li>个人信息2</li>
-      </ul>
-    </scroll>
-  </div>
+  <div></div>
 </template>
 
 <script>
-  import Scroll from 'components/common/scroll/Scroll'
-
-  export default {
-    name: "Profile",
-    components: {
-      Scroll
-    }
-  }
+export default {
+  name: "Profile",
+  components: {},
+};
 </script>
 
 <style scoped>
-  .content {
-    height: 300px;
-    background-color: red;
-    overflow: hidden;
-  }
+.content {
+  height: 300px;
+  background-color: red;
+  overflow: hidden;
+}
 </style>
