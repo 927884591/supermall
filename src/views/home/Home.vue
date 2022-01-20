@@ -1,26 +1,32 @@
 <template>
   <div id="home" class="wrapper">
-    <nav-bar>
-      <div slot="center">购物街</div>
-    </nav-bar>
-    <HomeBanner :banner="banner"></HomeBanner>
-    <RecommendView :recommends="recommend"></RecommendView>
-    <FeatureView></FeatureView>
-    <BarControl
-      class="tab-control"
-      :titles="['流行', '新款', '精选']"
-      @tabclick="tabclick"
-    ></BarControl>
-    <goods-list :goodslist="goods[currenttab].list"></goods-list>
+    <div>
+      <nav-bar>
+        <div slot="center">购物街</div>
+      </nav-bar>
+      <Scroll class="content" ref="scroll" :probe-type="3" @position="position">
+        <HomeBanner :banner="banner"></HomeBanner>
+        <RecommendView :recommends="recommend"></RecommendView>
+        <FeatureView></FeatureView>
+        <BarControl
+          class="tab-control"
+          :titles="['流行', '新款', '精选']"
+          @tabclick="tabclick"
+        ></BarControl>
+        <goods-list :goodslist="goods[currenttab].list"></goods-list>
+      </Scroll>
+      <BackTop @click.native="backtop" v-show="isbacktop"></BackTop>
+    </div>
   </div>
 </template>
 
 <script>
 import NavBar from "../../components/common/navbar/NavBar.vue";
+import Scroll from "../../components/common/scroll/Scroll.vue";
+import BackTop from "../../components/content/backtop/BackTop.vue";
 import FeatureView from "./childComponents/featureView.vue";
 import BarControl from "../../components/content/BarControl.vue";
 import GoodsList from "../../components/content/goodsList/GoodsList.vue";
-
 import HomeBanner from "./childComponents/HomeBanner.vue";
 import RecommendView from "./homeRecommend/RecommendView.vue";
 import { getMultidata, getHomeGoods } from "../../network/home.js";
@@ -45,6 +51,7 @@ export default {
           list: [],
         },
       },
+      isbacktop: false,
     };
   },
   components: {
@@ -54,6 +61,8 @@ export default {
     FeatureView,
     BarControl,
     GoodsList,
+    Scroll,
+    BackTop,
   },
   created() {
     this.getMultidataM();
@@ -78,14 +87,21 @@ export default {
         this.currenttab = "sell";
       }
     },
+    backtop() {
+      this.$refs.scroll.scrollto(0, 0);
+    },
+    position(position) {
+      console.log(position);
+      this.isbacktop = -position.y > 1000;
+    },
     /*
 			请求相关的方法
 		*/
     getMultidataM() {
       getMultidata().then((res) => {
-          this.banner = res.data.banner.list;
-          console.log(this.banner)
-          this.recommend = res.data.recommend.list;
+        this.banner = res.data.banner.list;
+        console.log(this.banner);
+        this.recommend = res.data.recommend.list;
       });
     },
     getHomeGoodsM(type) {
@@ -127,7 +143,6 @@ export default {
 
 .content {
   overflow: hidden;
-
   position: absolute;
   top: 44px;
   bottom: 49px;

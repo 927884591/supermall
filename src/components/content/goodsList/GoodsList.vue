@@ -1,14 +1,16 @@
 <template >
   <div class="goodslist">
-    <goods-list-item
-      v-for="item in goodslist"
-      :goodsListItem="item"
-    ></goods-list-item>
+    <div>
+      <goods-list-item
+        v-for="item in goodslist"
+        :goodsListItem="item"
+      ></goods-list-item>
+    </div>
   </div>
 </template>
 <script>
 import GoodsListItem from "./GoodsListItem.vue";
-import BScroll from 'better-scroll';
+
 export default {
   name: "GoodsList",
   props: {
@@ -26,6 +28,9 @@ export default {
 </script>
 <style>
 .goodslist {
+  overflow: hidden;
+}
+.goodslist div {
   display: flex;
   flex-wrap: wrap;
   padding-bottom: 60px;
@@ -43,7 +48,7 @@ export default {
 .goods-info {
   font-size: 12px;
   position: absolute;
-  bottom: 5p×;
+  bottom: -50px;
   left: 0;
   right: 0;
   overflow: hidden;

@@ -106,13 +106,12 @@
 </template>
 
 <script>
-  import BScroll from "better-scroll"
+
+import BScroll from "better-scroll";
 export default {
   name: "Category",
   mounted() {
-    new BScroll(document.querySelector('.wrapper'),{
-      
-    })
+    new BScroll(document.querySelector(".wrapper"), {});
   },
 };
 </script>
