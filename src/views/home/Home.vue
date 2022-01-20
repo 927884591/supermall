@@ -83,8 +83,9 @@ export default {
 		*/
     getMultidataM() {
       getMultidata().then((res) => {
-        this.banner = res.data.banner.list;
-        this.recommend = res.data.recommend.list;
+          this.banner = res.data.banner.list;
+          console.log(this.banner)
+          this.recommend = res.data.recommend.list;
       });
     },
     getHomeGoodsM(type) {

@@ -8,6 +8,7 @@
 </template>
 <script>
 import GoodsListItem from "./GoodsListItem.vue";
+import BScroll from 'better-scroll';
 export default {
   name: "GoodsList",
   props: {
