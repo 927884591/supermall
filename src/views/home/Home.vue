@@ -4,7 +4,7 @@
       <nav-bar>
         <div slot="center">购物街</div>
       </nav-bar>
-      <Scroll class="content" ref="scroll" :probe-type="3" @position="position">
+      <Scroll class="content" ref="scroll" :probe-type="3" @position="position" @pullingup="loadmore" :is-upload="true">
         <HomeBanner :banner="banner"></HomeBanner>
         <RecommendView :recommends="recommend"></RecommendView>
         <FeatureView></FeatureView>
@@ -91,8 +91,13 @@ export default {
       this.$refs.scroll.scrollto(0, 0);
     },
     position(position) {
-      console.log(position);
+      // console.log(position);
       this.isbacktop = -position.y > 1000;
+    },
+    loadmore(){
+      this.getHomeGoodsM(this.currenttab)
+      this.$refs.scroll.finishPullUp()
+      this.$refs.scroll.scroll.refresh()
     },
     /*
 			请求相关的方法
