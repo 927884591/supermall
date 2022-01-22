@@ -1,13 +1,13 @@
 <template>
   <div class="home-nav">
-    <div class="right">
-      <slot name="right"></slot>
+    <div class="left">
+      <slot name="left"></slot>
     </div>
     <div class="center">
       <slot name="center"></slot>
     </div>
-    <div class="left">
-      <slot name="left"></slot>
+    <div class="right">
+      <slot name="right"></slot>
     </div>
   </div>
 </template>
@@ -16,7 +16,7 @@ export default {
   name: "NavBar",
 };
 </script>
-<style>
+<style scoped>
 .home-nav {
   height: 44px;
   line-height: 44px;

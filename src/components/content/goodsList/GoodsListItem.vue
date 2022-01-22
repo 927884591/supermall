@@ -1,5 +1,5 @@
 <template>
-  <div class="goodsitem">
+  <div class="goodsitem" @click="toDetail">
     <img :src="goodsListItem.show.img" alt="" @load="itemload" />
     <div class="goods-info">
       <p>{{ goodsListItem.title }}</p>
@@ -9,22 +9,25 @@
   </div>
 </template>
 <script>
-  export default {
-    name: "GoodsListItem",
-    props: {
-      goodsListItem: {
-        type: Object,
-        default () {
-          return {};
-        },
+export default {
+  name: "GoodsListItem",
+  props: {
+    goodsListItem: {
+      type: Object,
+      default() {
+        return {};
       },
     },
-    methods: {
-      itemload() {
-        this.$bus.$emit('itemload')
-      }
+  },
+  methods: {
+    itemload() {
+      this.$bus.$emit("itemload");
     },
-  };
+    toDetail() {
+      this.$router.push("/detail");
+    },
+  },
+};
 </script>
 <style>
 </style>

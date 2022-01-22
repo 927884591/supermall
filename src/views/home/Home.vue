@@ -10,6 +10,7 @@
         :titles="['流行', '新款', '精选']"
         @tabclick="tabclick"
         v-show="isFixed"
+        ref="barcontrol1"
       ></BarControl>
       <Scroll
         class="content"
@@ -19,13 +20,18 @@
         @pullingup="loadmore"
         :is-upload="true"
       >
-        <HomeBanner :banner="banner" @imageload="imageload"></HomeBanner>
+        <HomeBanner
+          :banner="banner"
+          @imageload="imageload"
+          ref="homeBanner"
+        ></HomeBanner>
         <RecommendView :recommends="recommend"></RecommendView>
         <FeatureView></FeatureView>
         <BarControl
           class="tab-control"
           :titles="['流行', '新款', '精选']"
           @tabclick="tabclick"
+          ref="barcontrol"
         ></BarControl>
         <goods-list :goodslist="goods[currenttab].list"></goods-list>
       </Scroll>
@@ -67,6 +73,7 @@ export default {
       },
       isbacktop: false,
       isFixed: false,
+      tabTop: 0,
     };
   },
   components: {
@@ -125,6 +132,7 @@ export default {
     position(position) {
       // console.log(position);
       this.isbacktop = -position.y > 1000;
+      this.isFixed = -position.y > this.tabTop;
     },
     loadmore() {
       this.getHomeGoodsM(this.currenttab);
@@ -133,6 +141,8 @@ export default {
     },
     // banner图片加载完成触发事件
     imageload() {
+      this.tabTop = this.$refs.barcontrol.$el.offsetTop - 44;
+      console.log(this.tabTop);
       this.scroll && this.scroll.refresh();
     },
     /*
@@ -167,7 +177,6 @@ export default {
 .home-nav {
   background-color: pink;
   color: #fff;
-
   position: fixed;
   left: 0;
   right: 0;
@@ -176,23 +185,25 @@ export default {
 }
 
 .tab-control {
-  position: sticky;
-  top: 44px;
+  /* position: sticky; */
+  /* top: 44px; */
   z-index: 9;
   background-color: #fff;
 }
 
 .content {
   overflow: hidden;
-  position: absolute;
+  position: relative;
   top: 44px;
   bottom: 49px;
   left: 0;
   right: 0;
 }
+
 .fixed {
   position: relative;
   left: 0;
-  top: 44px;
+  top: 88px;
+  z-index: 20;
 }
 </style>
