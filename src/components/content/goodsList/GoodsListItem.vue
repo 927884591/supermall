@@ -24,7 +24,7 @@ export default {
       this.$bus.$emit("itemload");
     },
     toDetail() {
-      this.$router.push("/detail");
+      this.$router.push("/detail/" + this.goodsListItem.iid);
     },
   },
 };
