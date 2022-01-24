@@ -38,10 +38,10 @@ export default {
   },
   methods: {
     imageLoad() {
-      if (!this.isLoad) {
-        this.$emit("imageload");
-        this.isLoad = true;
-      }
+      // if (!this.isLoad) {
+      this.$emit("imageload");
+      // this.isLoad = true;
+      // }
     },
   },
 };

@@ -140,13 +140,13 @@ export default {
     loadmore() {
       this.getHomeGoodsM(this.currenttab);
       this.$refs.scroll.finishPullUp();
-      this.$refs.scroll.refresh();
+      this.$refs.scroll && this.$refs.scroll.refresh();
     },
     // banner图片加载完成触发事件
     imageload() {
       this.tabTop = this.$refs.barcontrol.$el.offsetTop;
       console.log(this.tabTop);
-      this.scroll && this.scroll.refresh();
+      this.$refs.scroll && this.$refs.scroll.refresh();
     },
     /*
 			请求相关的方法

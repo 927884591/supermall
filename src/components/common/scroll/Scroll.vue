@@ -16,12 +16,12 @@ export default {
         return 1;
       },
     },
-    isUpload:{
-      type:Boolean,
-      default(){
+    isUpload: {
+      type: Boolean,
+      default() {
         return false;
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -29,35 +29,34 @@ export default {
     };
   },
   mounted() {
-    setTimeout(() => {
-      this.scroll = new Scroll(this.$refs.aaa, {
-        click: true,
-        probeType: this.probeType,
-        pullUpLoad:this.isUpload
-      });
-      console.log(this.scroll);
-      this.scroll.on("scroll", (position) => {
-        this.$emit("position", position);
-        // console.log(position);
-      });
-      this.scroll.on("pullingUp",()=>{
-        // console.log("上拉加载更多");
-        console.log(this.isUpload);
-        this.$emit("pullingup")
-      })
-    }, 1000);
+    // setTimeout(() => {
+    this.scroll = new Scroll(this.$refs.aaa, {
+      click: true,
+      probeType: this.probeType,
+      pullUpLoad: this.isUpload,
+    });
+    console.log(this.scroll);
+    this.scroll.on("scroll", (position) => {
+      this.$emit("position", position);
+      // console.log(position);
+    });
+    this.scroll.on("pullingUp", () => {
+      // console.log("上拉加载更多");
+      console.log(this.isUpload);
+      this.$emit("pullingup");
+    });
+    // }, 2000);
   },
   methods: {
     scrollto(x, y, time = 300) {
       this.scroll.scrollTo(x, y, time);
     },
-    finishPullUp(){
-      this.scroll.finishPullUp()
+    finishPullUp() {
+      this.scroll.finishPullUp();
     },
-    refresh(){
-      console.log('-----');
-      this.scroll&&this.scroll.refresh()
-    }
+    refresh() {
+      this.scroll && this.scroll.refresh();
+    },
   },
 };
 </script>

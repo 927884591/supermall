@@ -2,7 +2,7 @@
   <div>
     <nav-bar>
       <div slot="left" class="left" @click="goBack">
-        <img src="../../../assets/img/common/back.svg" alt="" @load="imgload" />
+        <img src="../../../assets/img/common/back.svg" alt="" />
       </div>
       <div slot="center" class="center">
         <div
