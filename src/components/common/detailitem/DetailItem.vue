@@ -2,7 +2,7 @@
   <div>
     <nav-bar>
       <div slot="left" class="left" @click="goBack">
-        <img src="../../../assets/img/common/back.svg" alt="" />
+        <img src="../../../assets/img/common/back.svg" alt="" @load="imgload" />
       </div>
       <div slot="center" class="center">
         <div
@@ -30,6 +30,7 @@ export default {
       titles: ["商品", "参数", "评论", "推荐"],
       isActive: false,
       currentIndex: 0,
+      isload: true,
     };
   },
   methods: {
@@ -38,6 +39,10 @@ export default {
     },
     titleClick(index) {
       this.currentIndex = index;
+    },
+    imgload(isload) {
+      this.$emit("isload");
+      isload = false;
     },
   },
 };
