@@ -6,20 +6,13 @@
       <DetailBaseInfo v-if="goodsInfo" :goods="goodsInfo"></DetailBaseInfo>
       <DetailShopInfo v-if="goodsInfo && shop" :shop="shop"></DetailShopInfo>
       <DetailGoodsInfo
-        v-if="goodsInfo && shop"
+        v-if="goodsInfo"
         :detail-info="detailInfo"
         @imageLoad="imageLoad"
       ></DetailGoodsInfo>
-      <DetailParamInfo
-        v-if="goodsInfo && shop && paramInfo"
-        :paramInfo="paramInfo"
-      ></DetailParamInfo>
-      <DetailCommentInfo
-        :commentInfo="commentInfo"
-      ></DetailCommentInfo>
-      <GoodsList
-        :goodslist="recommendList"
-      ></GoodsList>
+      <DetailParamInfo :paramInfo="paramInfo"></DetailParamInfo>
+      <DetailCommentInfo :commentInfo="commentInfo"></DetailCommentInfo>
+      <GoodsList :goodslist="recommendList"></GoodsList>
     </Scroll>
   </div>
 </template>
