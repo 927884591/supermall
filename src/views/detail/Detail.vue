@@ -1,6 +1,6 @@
 <template>
   <div id="detail">
-    <detail-item @isIndex="isIndex" class="detailtop"></detail-item>
+    <detail-item ref="nav" @isIndex="isIndex" class="detailtop"></detail-item>
     <Scroll
       :probeType="3"
       class="content"
@@ -23,6 +23,7 @@
       ></DetailCommentInfo>
       <GoodsList ref="list" :goodslist="recommendList"></GoodsList>
     </Scroll>
+    <DetailBottomBar @addToCart="addToCart"></DetailBottomBar>
   </div>
 </template>
 <script>
@@ -33,6 +34,7 @@ import DetailShopInfo from "./childComps/DetailShopInfo";
 import DetailGoodsInfo from "./childComps/DetailGoodsInfo";
 import DetailParamInfo from "./childComps/DetailParamInfo.vue";
 import DetailCommentInfo from "./childComps/DetailCommentInfo.vue";
+import DetailBottomBar from "./childComps/DetailBottomBar.vue";
 import GoodsList from "../../components/content/goodsList/GoodsList.vue";
 import { getdetail } from "../../network/detail";
 import { getRecommend } from "../../network/recommend";
@@ -58,6 +60,7 @@ export default {
       params: 0,
       commend: 0,
       list: 0,
+      navIndex: 0,
     };
   },
   components: {
@@ -70,6 +73,7 @@ export default {
     DetailParamInfo,
     DetailCommentInfo,
     GoodsList,
+    DetailBottomBar,
   },
   created() {
     this.iid = this.$route.params.iid;
@@ -101,8 +105,13 @@ export default {
   },
   methods: {
     imageLoad() {
-      this.$refs.scroll && this.$refs.scroll.refresh();
       console.log("----");
+      this.$refs.scroll && this.$refs.scroll.refresh();
+      //给tabcontrol位置赋值
+      this.topimg = this.$refs.topimg.$el.offsetTop;
+      this.params = this.$refs.params.$el.offsetTop;
+      this.commend = this.$refs.commend.$el.offsetTop;
+      this.list = this.$refs.list.$el.offsetTop;
     },
     debounce(func, delay) {
       let timeout = null;
@@ -117,16 +126,19 @@ export default {
     isIndex(index) {
       switch (index) {
         case 0:
+          this.navIndex = index;
           this.$refs.scroll.scrollto(0, -this.topimg);
           break;
         case 1:
+          this.navIndex = index;
           this.$refs.scroll.scrollto(0, -this.params);
           break;
         case 2:
-          console.log(index)
+          this.navIndex = index;
           this.$refs.scroll.scrollto(0, -this.commend);
           break;
         case 3:
+          this.navIndex = index;
           this.$refs.scroll.scrollto(0, -this.list);
           break;
         default:
@@ -134,29 +146,37 @@ export default {
       }
     },
     position(position) {
-      if(position.y ===this.topimg){
-        
+      if (-position.y == this.topimg) {
+        this.$refs.nav.currentIndex = this.navIndex = 0;
       }
+      if (-position.y >= this.params && -position.y < this.commend) {
+        this.$refs.nav.currentIndex = this.navIndex = 1;
+      }
+      if (-position.y > this.commend && -position.y < this.list) {
+        this.$refs.nav.currentIndex = this.navIndex = 2;
+      }
+      if (-position.y > this.list && -position.y < Number.MAX_VALUE) {
+        this.$refs.nav.currentIndex = this.navIndex = 3;
+      }
+      // if (position.y > this.list) {
+      //   this.$refs.nav.currentIndex = this.navIndex = 4;
+      // }
+
       // console.log(position);
       // this.isbacktop = -position.y > 1000;
       // this.isFixed = -position.y > this.tabTop;
+    },
+    //该商品加入到购物车中
+    addToCart() {
+      // console.log(this.$router);
     },
   },
 
   mounted() {
     const refresh = this.debounce(this.$refs.scroll.refresh, 500);
     this.$bus.$on("itemload", () => {
-      // this.scroll && this.$refs.scroll.refresh()
       refresh();
     });
-    //给tabcontrol位置赋值
-    setTimeout(() => {
-      this.topimg = this.$refs.topimg.$el.offsetTop;
-      this.params = this.$refs.params.$el.offsetTop;
-      this.commend = this.$refs.commend.$el.offsetTop;
-      this.list = this.$refs.list.$el.offsetTop;
-      console.log(this.list);
-    }, 1000);
   },
 };
 </script>
