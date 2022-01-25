@@ -1,8 +1,14 @@
 <template>
   <div id="detail">
-    <detail-item class="detailtop"></detail-item>
-    <Scroll class="content" :isUpload="true" ref="scroll">
-      <TopImage v-if="istrue" :topImages="topImages"></TopImage>
+    <detail-item @isIndex="isIndex" class="detailtop"></detail-item>
+    <Scroll
+      :probeType="3"
+      class="content"
+      :isUpload="true"
+      ref="scroll"
+      @position="position"
+    >
+      <TopImage ref="topimg" v-if="istrue" :topImages="topImages"></TopImage>
       <DetailBaseInfo v-if="goodsInfo" :goods="goodsInfo"></DetailBaseInfo>
       <DetailShopInfo v-if="goodsInfo && shop" :shop="shop"></DetailShopInfo>
       <DetailGoodsInfo
@@ -10,9 +16,12 @@
         :detail-info="detailInfo"
         @imageLoad="imageLoad"
       ></DetailGoodsInfo>
-      <DetailParamInfo :paramInfo="paramInfo"></DetailParamInfo>
-      <DetailCommentInfo :commentInfo="commentInfo"></DetailCommentInfo>
-      <GoodsList :goodslist="recommendList"></GoodsList>
+      <DetailParamInfo ref="params" :paramInfo="paramInfo"></DetailParamInfo>
+      <DetailCommentInfo
+        ref="commend"
+        :commentInfo="commentInfo"
+      ></DetailCommentInfo>
+      <GoodsList ref="list" :goodslist="recommendList"></GoodsList>
     </Scroll>
   </div>
 </template>
@@ -44,6 +53,11 @@ export default {
       paramInfo: {},
       commentInfo: {},
       recommendList: [],
+      //tabcontrol的位置信息初始化
+      topimg: 0,
+      params: 0,
+      commend: 0,
+      list: 0,
     };
   },
   components: {
@@ -99,13 +113,50 @@ export default {
         }, delay);
       };
     },
+    //监听tabcontrol的下标
+    isIndex(index) {
+      switch (index) {
+        case 0:
+          this.$refs.scroll.scrollto(0, -this.topimg);
+          break;
+        case 1:
+          this.$refs.scroll.scrollto(0, -this.params);
+          break;
+        case 2:
+          console.log(index)
+          this.$refs.scroll.scrollto(0, -this.commend);
+          break;
+        case 3:
+          this.$refs.scroll.scrollto(0, -this.list);
+          break;
+        default:
+          break;
+      }
+    },
+    position(position) {
+      if(position.y ===this.topimg){
+        
+      }
+      // console.log(position);
+      // this.isbacktop = -position.y > 1000;
+      // this.isFixed = -position.y > this.tabTop;
+    },
   },
+
   mounted() {
     const refresh = this.debounce(this.$refs.scroll.refresh, 500);
     this.$bus.$on("itemload", () => {
       // this.scroll && this.$refs.scroll.refresh()
       refresh();
     });
+    //给tabcontrol位置赋值
+    setTimeout(() => {
+      this.topimg = this.$refs.topimg.$el.offsetTop;
+      this.params = this.$refs.params.$el.offsetTop;
+      this.commend = this.$refs.commend.$el.offsetTop;
+      this.list = this.$refs.list.$el.offsetTop;
+      console.log(this.list);
+    }, 1000);
   },
 };
 </script>

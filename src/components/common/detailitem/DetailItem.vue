@@ -33,12 +33,16 @@ export default {
       isload: true,
     };
   },
+  props: {
+    
+  },
   methods: {
     goBack() {
       this.$router.go(-1);
     },
     titleClick(index) {
       this.currentIndex = index;
+      this.$emit("isIndex", index);
     },
     imgload(isload) {
       this.$emit("isload");

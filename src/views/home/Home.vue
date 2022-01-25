@@ -99,7 +99,7 @@ export default {
   },
   computed: {},
   methods: {
-    // 防抖函数
+    // 防抖函数scrollto
     debounce(func, delay) {
       let timeout = null;
       return function (...args) {

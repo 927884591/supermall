@@ -29,7 +29,11 @@ export default {
       this.$bus.$emit("itemload");
     },
     toDetail() {
-      this.$router.push("/detail/" + this.goodsListItem.iid);
+      if (this.goodsListItem.iid) {
+        this.$router.push("/detail/" + this.goodsListItem.iid);
+      } else {
+        this.$router.push("/detail/" + this.goodsListItem.item_id);
+      }
     },
   },
 };
