@@ -1,173 +1,99 @@
 <template>
-  <div class="my">
-    <div class="header">
-      <div class="title">我的信息</div>
-      <div class="info">
-        <img src="../../assets/img/profile/avatar.svg" />
-        <div class="center">
-          <p class="login">登录/注册</p>
-          <p class="iphone">暂无绑定的手机号</p>
-        </div>
-        <div class="i"></div>
-      </div>
-    </div>
-    <div class="detail">
-      <div>
-        <p><span>0.00</span>&nbsp;元</p>
-        <p>我的余额</p>
-      </div>
-      <div class="center">
-        <p><span>0</span>&nbsp;个</p>
-        <p>我的优惠</p>
-      </div>
-      <div>
-        <p><span>0</span>&nbsp;分</p>
-        <p>我的积分</p>
-      </div>
-    </div>
-    <div class="news">
-      <div>
-        <img src="@/assets/img/profile/message.svg" />
-        <span>我的消息</span>
-      </div>
-      <div class="shop">
-        <img src="../../assets\/img/profile/pointer.svg" />
-        <p>我的商城</p>
-      </div>
-      <div>
-        <img src="../../assets/img/profile/vip.svg" />
-        <p>会员卡</p>
-      </div>
-    </div>
-    <div class="cart">
-      <div>
-        <img src="../../assets/img/profile/cart.svg" />
-        <span>我的购物车</span>
-      </div>
-      <div>
-        <img src="../../assets/img/profile/shopping.svg" />
-        <p class="app">下载购物APP</p>
-      </div>
-    </div>
+  <div id="profile" v-if="uBaseInfo != null">
+    <user-bar :uBaseInfo="uBaseInfo"></user-bar>
+    <order-bar :uid="uBaseInfo.uid"></order-bar>
+    <option-bar :uid="uBaseInfo.uid"></option-bar>
+    <div class="login_out" @click="quitClick">退出账号</div>
+  </div>
+  <div v-else>
+    <h2>没有该用户数据</h2>
   </div>
 </template>
 <script>
-export default {};
+import UserBar from "./childComps/UserBar.vue";
+import OrderBar from "./childComps/OrderBar.vue";
+import OptionBar from "./childComps/OptionBar.vue";
+
+import { removeToken, getToken, getUid } from "common/const.js";
+import { postQuitLogin } from "network/login.js";
+import { getProfileInfo } from "network/profile.js";
+
+export default {
+  data() {
+    return {
+      uBaseInfo: {
+        //通过uid到达用户的个人界面
+        uid: "",
+        uname: "",
+        uavatar: ""
+      }
+    };
+  },
+  components: {
+    UserBar,
+    OrderBar,
+    OptionBar
+  },
+  created() {
+    this.uBaseInfo.uid = this.$route.params.uid;
+    //将该uid传给后台，去寻找uid的各种数据
+    this.getProfileInfo(this.uBaseInfo.uid);
+
+    //如果 token里的uid 和 路径中的uid一致，则表示是自己的账号
+    console.log(this.uBaseInfo.uid);
+    console.log(this.uBaseInfo.uavatar);
+    console.log(this.uBaseInfo.uname);
+  },
+  methods: {
+    quitClick() {
+      //1. 让服务器记录当前的token的第三条字段signature
+      this.quitLogin();
+      //2. 清除当前的storage
+      removeToken();
+      //3. 路由跳转到登录界面
+      this.$router.replace("/login");
+    },
+    async quitLogin() {
+      let allToken = getToken();
+      let res = await postQuitLogin(getUid(), allToken);
+      if (res) {
+        //成功记录了uinfor里的 token
+        console.log("成功记录");
+      } else {
+        console.log("记录失败");
+      }
+    },
+    async getProfileInfo(uid) {
+      let res = await getProfileInfo(uid);
+      if (!res.success) {
+        this.uBaseInfo = null;
+      } else {
+        this.uBaseInfo.uavatar = res.data.uImg;
+        this.uBaseInfo.uname = res.data.name;
+      }
+      console.log(this.uBaseInfo);
+    }
+  }
+};
 </script>
-<style>
-.my .header {
-  padding: 0.2rem 0.2rem 0.4rem 0.2rem;
+<style scoped>
+#profile {
+  font-size: 0.68rem;
+  background-color: rgba(190, 190, 190, 0.2);
+  height: 100vh;
+}
+.login_out {
+  font-size: 0.8rem;
+  color: white;
+
+  width: 15rem;
   height: 2rem;
-  background-color: #ff8e96;
-}
-.title {
-  color: white;
-  font-size: 0.4rem;
-  width: 1.6rem;
-  line-height: 0.66rem;
+  line-height: 2rem;
   margin: 0 auto;
+
+  background-color: var(--color-high-text);
+  border-radius: 0.2rem;
+
   text-align: center;
-}
-.info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: white;
-  margin-top: 0.1rem;
-}
-img {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-.center {
-  margin-left: -1.5rem;
-}
-.login {
-  font-size: 0.4rem;
-}
-.iphone {
-  display: flex;
-  align-items: center;
-  font-size: 0.32rem;
-}
-
-.i {
-  font-size: 0.5rem;
-}
-
-.detail {
-  display: flex;
-  height: 1.8rem;
-  border-bottom: 0.12rem solid #f2f2f2;
-}
-.center {
-  border-left: 1px solid #fafafa;
-  border-right: 1px solid #fafafa;
-}
-.center div {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-  font-size: 0.32rem;
-}
-p span {
-  color: #e67962;
-  font-weight: bold;
-}
-
-.news {
-  display: flex;
-  flex-direction: column;
-  height: 3.2rem;
-  padding: 0 0.3rem;
-  border-bottom: 0.12rem solid #f2f2f2;
-}
-
-.shop p {
-  display: flex;
-  align-items: center;
-  width: calc(100% - 0.6rem);
-  height: 100%;
-  border-top: 1px solid #f2f2f2;
-  border-bottom: 1px solid #f2f2f2;
-}
-
-.news div {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  font-size: 0.32rem;
-}
-.news div img {
-  margin-right: 0.2rem;
-  width: 0.6rem;
-  height: 0.6rem;
-}
-
-.cart {
-  padding: 0 0.2rem;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  height: 2.1rem;
-}
-.cart div {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  font-size: 0.32rem;
-}
-.cart div img {
-  width: 0.6rem;
-  height: 0.6rem;
-}
-.app {
-  display: flex;
-  align-items: center;
-  width: calc(100% - 0.6rem);
-  height: 100%;
-  border-top: 1px solid #f2f2f2;
 }
 </style>

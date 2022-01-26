@@ -1,4 +1,4 @@
-const { resolve } = require("core-js/fn/promise");
+// const { resolve } = require("core-js/fn/promise");
 
 module.exports = {
 	configureWebpack: {
