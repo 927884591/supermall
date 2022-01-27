@@ -168,7 +168,13 @@ export default {
     },
     //该商品加入到购物车中
     addToCart() {
-      // console.log(this.$router);
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goodsInfo.title;
+      product.desc = this.goodsInfo.desc;
+      product.price = this.goodsInfo.lowNowPrice;
+      product.iid = this.iid;
+      this.$store.commit("addcart", product);
     },
   },
 
